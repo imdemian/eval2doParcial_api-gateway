@@ -1,4 +1,5 @@
 const gateway = require("fast-gateway");
+const cors = require("cors");
 
 const PORT = process.env.PORT || 3500;
 
@@ -17,6 +18,9 @@ const server = gateway({
     },
   ],
 });
+
+// Use CORS middleware
+server.use(cors());
 
 server
   .start(PORT)
