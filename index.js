@@ -2,7 +2,6 @@ const gateway = require("fast-gateway");
 const cors = require("cors");
 
 const PORT = process.env.PORT || 3500;
-
 const server = gateway({
   routes: [
     {
@@ -19,13 +18,17 @@ const server = gateway({
   ],
 });
 
-// Use CORS middleware
-server.use(cors());
+// Agrega CORS middleware
+server.use(
+  cors({
+    origin: "http://localhost:5173", // Permite solicitudes desde tu front-end
+  })
+);
 
 server
   .start(PORT)
   .then((server) => {
-    console.log("API Gateway running on http://localhost:" + PORT);
+    console.log("API Gateway running on port " + PORT);
   })
   .catch((error) => {
     console.error("Error starting API Gateway", error);
