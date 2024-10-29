@@ -1,21 +1,8 @@
-const express = require("express");
 const gateway = require("fast-gateway");
 const cors = require("cors");
 
 const PORT = process.env.PORT || 3500;
-const server = express();
-
-server.use(
-  cors({
-    origin: "http://localhost:5173",
-  })
-);
-
-// Middleware para manejar OPTIONS
-server.options("*", cors());
-
-const apiGateway = gateway({
-  server: server,
+const server = gateway({
   routes: [
     {
       prefix: "/equipos",
@@ -31,9 +18,21 @@ const apiGateway = gateway({
   ],
 });
 
-apiGateway
+// Asegúrate de que CORS esté configurado correctamente
+server.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: "GET,POST,PUT,DELETE,OPTIONS",
+    allowedHeaders: "Content-Type, Authorization",
+  })
+);
+
+// Manejar solicitudes preflight OPTIONS
+server.options("*", cors());
+
+server
   .start(PORT)
-  .then(() => {
+  .then((server) => {
     console.log("API Gateway running on port " + PORT);
   })
   .catch((error) => {
